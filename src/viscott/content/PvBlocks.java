@@ -66,8 +66,8 @@ public class PvBlocks {
 
                     /*Buildings*/
 
-                    /*Conveyors*/micromassConveyor,massJunction,massRouter, microTransportGate,
-                            megaTransportGate, megaLiquidTransportGate, microLiquidTransportGate,
+                    /*Conveyors*/micromassConveyor,massJunction,massRouter,microTransportGate,
+                            megaTransportGate,
                             megaMassConveyor,megaMassJunction,megaMassRouter,
                             nueromassConveyor,
 
@@ -75,10 +75,10 @@ public class PvBlocks {
                     /*Grinders*/harvestGrinder,behemothGrinder,oilGrinder,
 
                     /*Power*/opticalNode,auditoryNode,compressedBattery,
-                    /*Power Production*/smallCarbonPanel,largeCarbonPanel,lithiumDegenerator,
+                    /*Power Production*/oilConcentrator,smallCarbonPanel,largeCarbonPanel,lithiumDegenerator,
                                         keroseneGenerator,
                     /*Production*/siliconMassForge,particalAccelerator, keroseneMixer, keroseneHeater, carbonWeaver,
-                    /*Liquids*/concentratedJunction,concentratedRouter,concentratedConduit,
+                    /*Liquids*/concentratedJunction,concentratedRouter,concentratedConduit,concentratedContainer,concentratedTank,megaTransportValve,microTransportValve,
                             micropulsePump,
                     /*Pressure related*/ pressureSource,
                     /*Unit Creation*/nueroSpawnPad,eliteSpawnPad,
@@ -275,7 +275,7 @@ public class PvBlocks {
                         speed = 100;
                     }};
                 }};
-                megaLiquidTransportGate = new LiquidBridge("mega-liquid-transport-gate"){{
+                megaTransportValve = new LiquidBridge("mega-transport-valve"){{
                     //todo adjust items
                     requirements(Category.liquid, with(PvItems.zirconium, 50, PvItems.nobelium, 25, PvItems.lithium, 10));
                     size = 3;
@@ -286,7 +286,7 @@ public class PvBlocks {
                     range = 120;
                     consumePower(330/60f);
                 }};
-                microLiquidTransportGate = new LiquidBridge("micro-liquid-transport-gate"){{
+                microTransportValve = new LiquidBridge("micro-transport-valve"){{
                     //todo adjust items
                 requirements(Category.liquid, with(PvItems.zirconium, 50, PvItems.erbium, 25, PvItems.lithium, 10));
                 size = 1;
@@ -298,10 +298,10 @@ public class PvBlocks {
                 consumePower(330/60f);
             }};
 
-                harvestGrinder = new Grinder("harvest-grinder")
+                fieldExtractor = new Grinder("field-extractor")
                 {{
                     requirements(Category.production, with(PvItems.zirconium,35));
-                    localizedName = "Harvest Grinder";
+                    localizedName = "Field Extractor";
                     health = 200;
                     liquidCapacity = 20;
                     size = 2;
@@ -310,10 +310,21 @@ public class PvBlocks {
                     itemCapacity = 20;
                     updateEffect = Fx.smokeCloud;
                 }};
-                behemothGrinder = new Grinder("behemoth-grinder")
+                squareExtractor = new Grinder("square-extractor")
+                {{
+                    requirements(Category.production, with(PvItems.zirconium,35,PvItems.lithium,5,Items.silicon,25)); //Todo
+                    localizedName = "Square Extractor";
+                    consumeLiquid(Liquids.oil, 4f);
+                    range = 3;
+                    tier = 2;
+                    size = 2;
+                    health = 190;
+                    blockedItem = PvItems.erbium;
+                }};
+                cubicExtractor = new Grinder("cubic-extactor")
                 {{
                     requirements(Category.production, with(PvItems.zirconium,100,PvItems.platinum,100)); //Todo
-                    localizedName = "Harvest Grinder";
+                    localizedName = "Cubic Extractor";
                     health = 570;
                     liquidCapacity = 20;
                     consumePower(50f/60f);
@@ -324,10 +335,10 @@ public class PvBlocks {
                     itemCapacity = 40;
                     updateEffect = Fx.smeltsmoke;
                 }};
-                harvestDrill = new Drill("harvest-drill")
+                triDrill = new Drill("tri-drill")
                 {{
                     requirements(Category.production, with(PvItems.zirconium,15));
-                    localizedName = "Harvest Drill";
+                    localizedName = "Tri Drill";
                     size = 2;
                     drillTime = 500;
                     tier = 1;
@@ -339,7 +350,7 @@ public class PvBlocks {
                 tetraDrill = new Drill("tetra-drill")
                 {{
                     requirements(Category.production, with(PvItems.zirconium,60,PvItems.platinum,25)); //Todo
-                    localizedName = "Harvest Drill";
+                    localizedName = "Tetra Drill";
                     size = 3;
                     drillTime = 200;
                     tier = 2;
@@ -351,8 +362,8 @@ public class PvBlocks {
                 }};
                 spectrumDrill = new Drill("spectrum-drill")
                 {{
-                    requirements(Category.production, with(PvItems.zirconium,160,PvItems.platinum,65,PvItems.nobelium,40)); //Todo
-                    localizedName = "Harvest Drill";
+                    requirements(Category.production, with(Items.silicon,125,PvItems.zirconium,150,PvItems.platinum,100,PvItems.erbium,75)); //Todo
+                    localizedName = "Spectrum Drill";
                     size = 4;
                     drillTime = 160;
                     tier = 3;
@@ -389,7 +400,17 @@ public class PvBlocks {
                     emptyLightColor = Color.black;
                     fullLightColor = Color.valueOf("8fcaf2");
                 }};
-
+                oilConcentrator = new ThermalGenerator("oil-concentrator")
+                {{
+                    requirements(Category.power, with(PvItems.zirconium,20,PvItems.lithium,30));
+                    localizedName = "Oil Concentrator";
+                    health = 80;
+                    attribute = Attribute.oil;
+                    powerProduction = 1f / 3f;
+                    floating = true;
+                    ambientSound = Sounds.hum;
+                    ambientSoundVolume = 0.015f;
+                }};       
                 smallCarbonPanel = new ConstGenerator("small-carbon-panel")
                 {{
                     requirements(Category.power, with(Items.silicon,15,PvItems.carbonFiber,5));
@@ -457,7 +478,7 @@ public class PvBlocks {
                     craftTime = 3.3f*60f;
                     outputItem = new ItemStack(Items.silicon,5);
                 }};
-                particalAccelerator = new HeatCrafter("partical-accelerator")
+                particleAccelerator = new HeatCrafter("particle-accelerator")
                 {{
                     requirements(Category.crafting, with(PvItems.zirconium,50,PvItems.platinum,30,Items.silicon,50));
                     localizedName = "Particle Accelerator";
@@ -468,14 +489,14 @@ public class PvBlocks {
                     itemCapacity = 10;
                     craftTime = 5.8f*60f;
                     heatRequirement = 6;
-                    maxEfficiency = 5;
+                    maxEfficiency = 2;
                     outputItem = new ItemStack(PvItems.nobelium,3);
                 }};
                 keroseneMixer = new GenericCrafter("kerosene-mixer")
                 {
                     {
                         requirements(Category.crafting, with(PvItems.zirconium, 50, PvItems.platinum, 30, PvItems.lithium, 30));
-                        localizedName = "Kerosene mixer";
+                        localizedName = "Kerosene Mixer";
                         health = 185;
                         size = 2;
                         consumeItems(with(PvItems.zirconium, 2));
@@ -489,7 +510,7 @@ public class PvBlocks {
                     carbonWeaver = new GenericCrafter("carbon-weaver")
                     {{
                         requirements(Category.crafting, with(PvItems.zirconium,50,PvItems.platinum,30,Items.silicon,50));
-                        localizedName = "Kerosene mixer";
+                        localizedName = "Carbon Weaver";
                         health = 1300;
                         size = 3;
                         consumeItems(with(PvItems.zirconium,7, Items.silicon, 5, PvItems.platinum, 5));
@@ -521,6 +542,22 @@ public class PvBlocks {
                     health = 60;
                     liquidCapacity = 40;
                 }};
+                concentratedContainer = new LiquidRouter("concentrated-container")
+                {{
+                    requirements(Category.liquid, with(PvItems.lithium,25,PvItems.platinum,20));
+                    size = 2;
+                    localizedName = "Concentrated Container";
+                    scaledHealth = 60;
+                    liquidCapacity = 800;
+                }};
+                concentratedTank = new LiquidRouter("concentrated-router")
+                {{
+                    requirements(Category.liquid, with(PvItems.lithium,80,PvItems.platinum,60));
+                    size = 3;
+                    localizedName = "Concentrated Tank";
+                    scaledHealth = 60;
+                    liquidCapacity = 2000;
+                }};
                 concentratedJunction = new LiquidJunction("concentrated-junction")
                 {{
                     requirements(Category.liquid, with(PvItems.lithium,4,PvItems.zirconium,4));
@@ -536,33 +573,35 @@ public class PvBlocks {
                     liquidCapacity = 30;
                     junctionReplacement = concentratedJunction;
                 }};
-                nueroSpawnPad = new BulkUnitFactory("nuero-spawn-pad")
+                neuroSpawnPad = new BulkUnitFactory("neuro-spawn-pad")
                 {{
-                    requirements(Category.units,with(PvItems.zirconium,250,Items.silicon,75,PvItems.platinum,40)); //Todo
-                    localizedName = "Nuero Spawn Pad";
+                    requirements(Category.units,with(Items.silicon,100,PvItems.zirconium,250,PvItems.platinum,50)); //Todo
+                    localizedName = "Neuro Spawn Pad";
                     health = 1600;
                     size = 5;
+                    squareSprite = false;
                     consumePower(130f/60f);
                     itemCapacity = 3000;
                     liquidCapacity = 200;
                     plans = new Seq<>().with(
-                        new UnitPlan(PvUnits.particle,15*60f,with(PvItems.lithium,20,PvItems.platinum,10)),
-                    new UnitPlan(PvUnits.snippet,15*60f,with(PvItems.lithium,30,PvItems.platinum,20,PvItems.nobelium,10))
+                        new UnitPlan(PvUnits.particle,25*60f,with(Items.silicon,30,PvItems.lithium,15)),
+                    new UnitPlan(PvUnits.snippet,35*60f,with(Items.silicon,30,PvItems.lithium,20,PvItems.nobelium,10))
                     );
                 }};
                 eliteSpawnPad = new BulkUnitFactory("elite-spawn-pad")
                 {{
-                    requirements(Category.units,with(PvItems.zirconium,600,Items.silicon,210,PvItems.platinum,80,PvItems.nobelium,120)); //Todo
+                    requirements(Category.units,with(Items.silicon,800,PvItems.zirconium,650,PvItems.platinum,250,PvItems.nobelium,50)); //Todo
                     localizedName = "Elite Spawn Pad";
                     health = 3400;
                     size = 7;
+                    squareSprite = false;
                     consumePower(480f/60f);
                     itemCapacity = 8000;
                     liquidCapacity = 500;
                     maxAmount = 20;
                     plans = new Seq<>().with(
-                            new UnitPlan(PvUnits.particle,15*60f,with(PvItems.lithium,20,PvItems.platinum,10)),
-                                    new UnitPlan(PvUnits.snippet,20*60f,with(PvItems.lithium,30,PvItems.platinum,20,PvItems.nobelium,10))
+                            new UnitPlan(PvUnits.particle,25*60f,with(Items.silicon,30,PvItems.lithium,15)),
+                                    new UnitPlan(PvUnits.snippet,35*60f,with(Items.silicon,30,PvItems.lithium,20,PvItems.nobelium,10))
                     );
                 }};
                 coreHover = new CoreBlock("core-hover")
@@ -575,17 +614,6 @@ public class PvBlocks {
                     size = 3;
                     unitCapModifier = 30;
                     itemCapacity = 6000;
-                }};
-                oilGrinder = new LiquidGrinder("oil-grinder")
-                {{
-                    requirements(Category.production, with(PvItems.zirconium,35,PvItems.lithium,5,Items.silicon,25)); //Todo
-                    localizedName = "Oil Grinder";
-                    extractedLiquid = new LiquidStack(Liquids.oil,4f);
-                    range = 3;
-                    tier = 2;
-                    size = 2;
-                    health = 190;
-                    liquidCapacity = 40;
                 }};
                 zirconWall = new Wall("zircon-wall")
                 {{
